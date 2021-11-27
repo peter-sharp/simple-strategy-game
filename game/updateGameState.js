@@ -188,6 +188,6 @@ export default function updateGameState(state, event) {
         const [player] = state.players;
         state.winner = player.teamColor;
     }
-    console.log(state)
+
     return state;
 }

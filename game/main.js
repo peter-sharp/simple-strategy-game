@@ -4,6 +4,8 @@ import model from './model.js';
 import delegate from './delegate.js';
 import updateGameState from './updateGameState.js';
 import createObject from './createObject.js';
+import combineReducers from './combineReducers.js';
+import initPlugins from './initPlugins.js';
 
 const initialState = {
     cols: 7,
@@ -37,17 +39,18 @@ const initialState = {
     HUDControls: []
 }
 
-export default function init() {
-    const [listen, emit] = model(initialState, updateGameState)
+export default function init({plugins= []} = {}) {
+
+    
+    const [_renderers = [], reducers = []] = initPlugins(plugins)
+
+    const [listen, emit] = model(initialState, combineReducers([...reducers, updateGameState]))
+
     const ctx = document.getElementById('gameBoard').getContext('2d');
     const HUD = document.getElementById('HUD')
     const game = document.getElementById('game')
+
     listen(render.bind(null, ctx, HUD, renderers))
-
-
-    emit({ type: 'init' })
-
-
 
     game.addEventListener('click', delegate('[data-unit-button]', function unitAction(ev) {
         emit({ type: 'unitAction', id: parseInt(ev.target.dataset.id, 10) });
@@ -74,9 +77,11 @@ export default function init() {
     }
 
     window.addEventListener('keyup', function handleShortcut(ev) {
-        console.log(ev.key);
         if(ev.key in keyMappings) {
             emit(keyMappings[ev.key])
         }
     })
+
+
+    emit({ type: 'init' })
 }

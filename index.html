@@ -120,7 +120,8 @@
     </style>
     <script type="module">
         import init from "./game/main.js";
-        init()
+        import logPlugin from "./plugins/log.js";
+        init({ plugins: [logPlugin] })
     </script>
 </head>
 <body class="center">

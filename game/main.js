@@ -39,19 +39,7 @@ const initialState = {
     HUDControls: []
 }
 
-export default function init({plugins= []} = {}) {
-
-    
-    const [_renderers = [], reducers = []] = initPlugins(plugins)
-
-    const [listen, emit] = model(initialState, combineReducers([...reducers, updateGameState]))
-
-    const ctx = document.getElementById('gameBoard').getContext('2d');
-    const HUD = document.getElementById('HUD')
-    const game = document.getElementById('game')
-
-    listen(render.bind(null, ctx, HUD, renderers))
-
+function gameController(emit, game) {
     game.addEventListener('click', delegate('[data-unit-button]', function unitAction(ev) {
         emit({ type: 'unitAction', id: parseInt(ev.target.dataset.id, 10) });
     }))
@@ -63,25 +51,47 @@ export default function init({plugins= []} = {}) {
         });
     }))
 
-    game.addEventListener('click', delegate('button[name="endTurn"]', function endTurn(ev) {
+    game.addEventListener('click', delegate('button[name="endTurn"]', function endTurn() {
         emit({
             type: 'endTurn'
         });
     }))
 
     const keyMappings = {
-        'ArrowLeft': { type:'moveUnit', direction: [-1, 0]},
-        'ArrowRight': { type:'moveUnit', direction: [1, 0]},
-        'ArrowUp': { type:'moveUnit', direction: [0, -1]},
-        'ArrowDown': { type:'moveUnit', direction: [0, 1]}
+        'ArrowLeft': { type: 'moveUnit', direction: [-1, 0] },
+        'ArrowRight': { type: 'moveUnit', direction: [1, 0] },
+        'ArrowUp': { type: 'moveUnit', direction: [0, -1] },
+        'ArrowDown': { type: 'moveUnit', direction: [0, 1] }
     }
 
     window.addEventListener('keyup', function handleShortcut(ev) {
-        if(ev.key in keyMappings) {
+        if (ev.key in keyMappings) {
             emit(keyMappings[ev.key])
         }
     })
 
 
     emit({ type: 'init' })
+}
+
+export default function init({plugins= []} = {}) {
+
+    
+    const [_renderers = [], reducers = [], controllers = []] = initPlugins(plugins)
+
+    const [listen, emit] = model(initialState, combineReducers([...reducers, updateGameState]))
+    
+    controllers.push(gameController);
+
+    const ctx = document.getElementById('gameBoard').getContext('2d');
+    const HUD = document.getElementById('HUD')
+    const game = document.getElementById('game')
+    
+    
+    listen(render.bind(null, ctx, HUD, renderers))
+    
+    for (const controller of controllers) {
+        controller(emit, game);
+    }
+  
 }

@@ -1,3 +1,5 @@
+import getCenter from "./utils/getCenter.js";
+
 
 const renderers = {
     terrain: [
@@ -106,7 +108,11 @@ const renderers = {
         soldier: function renderSoldier(ctx, { pos, size, teamColor, state: unitState }) {
             const [x, y] = pos;
             const soldierWidth = size * 0.3;
-            const soldierHeight = size * 0.8;
+            const soldierHeight = size * 0.6;
+            const legsWidth = soldierWidth * 0.77;
+            const sectionHeight = soldierHeight * 0.5;
+            const headWidth = soldierWidth * 0.65;
+            const headHeight = soldierHeight * 0.333;
             const soldierMarginX = size * 0.7 / 2;
 
             // shadow
@@ -115,19 +121,47 @@ const renderers = {
             ctx.fillStyle = '#00000022'
             ctx.fillRect(
                 x * size + soldierMarginX - shadowMargin,
-                y * size + soldierHeight - shadowMargin,
+                y * size + soldierHeight - shadowMargin + headHeight,
                 soldierWidth + shadowMargin * 2,
                 shadowHeight
             )
             if (unitState != 'destroyed') {
-                // body    
                 const soldierMarginY = size * 0.2 / 2;
+
+                // legs    
+                ctx.fillStyle = teamColor || '#000'
+                const legsCenter = getCenter(soldierWidth, legsWidth);
+                ctx.fillRect(
+                    x * size + soldierMarginX + legsCenter,
+                    y * size + soldierMarginY + headHeight + sectionHeight,
+                    legsWidth,
+                    sectionHeight
+                )
+
+                // body    
                 ctx.fillStyle = teamColor || '#000'
                 ctx.fillRect(
                     x * size + soldierMarginX,
-                    y * size + soldierMarginY,
+                    y * size + soldierMarginY + headHeight,
                     soldierWidth,
-                    soldierHeight
+                    sectionHeight
+                )
+
+                // head
+                ctx.fillStyle =  '#a76'
+                const headCenter = getCenter(soldierWidth, headWidth);
+                ctx.fillRect(
+                     x * size + headCenter + soldierMarginX,
+                     y * size + soldierMarginY + size * 0.07,
+                     headWidth,
+                     headHeight
+                )
+                ctx.fillStyle = teamColor || '#000'
+                ctx.fillRect(
+                    x * size + headCenter + soldierMarginX,
+                    y * size + soldierMarginY + size * 0.07,
+                    headWidth,
+                    headHeight * 0.5
                 )
             }
         }

@@ -26,8 +26,20 @@ const renderers = {
                 }
                 offset = offset ? 0 : 1
             }
+        },
+        function renderForest(ctx, { pos, size }) {
+            const [x, y] = pos;
+            
+            ctx.fillStyle = '#11a955';
+            ctx.fillRect(x * size, y * size, size, size)
+            
+            ctx.fillStyle = '#175'
+            const tenth = size * 0.1;
+            ctx.fillRect(x * size, y * size - tenth, size, size)
 
-
+            const halfSize = size * 0.5
+            ctx.fillStyle = '#1a6'
+            ctx.fillRect(x * size, y * size - halfSize, size, size)
         }
     ],
     objects: {

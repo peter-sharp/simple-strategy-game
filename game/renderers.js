@@ -3,17 +3,25 @@ const renderers = {
     terrain: [
         function renderWater(ctx, { pos, size }) {
             const [x, y] = pos;
+
+            const offset = size * 0.1;
+            const baseY = y * size + offset;
             ctx.fillStyle = '#37f'
-            ctx.fillRect(x * size, y * size, size, size)
+            ctx.fillRect(x * size, baseY, size, size)
 
             const ripple = size * 0.25;
             ctx.fillStyle = '#3070ff'
-            ctx.fillRect(x * size, y * size, size, ripple)
+            ctx.fillRect(x * size, baseY, size, ripple)
 
-            ctx.fillRect(x * size, y * size + ripple * 2, size, ripple)
+            ctx.fillRect(x * size, baseY + ripple * 2, size, ripple)
         },
         function renderGrass(ctx, { pos, size }) {
             const [x, y] = pos;
+
+            const sideOffset = size * 0.1;
+            ctx.fillStyle = '#364';
+            ctx.fillRect(x * size, y * size + sideOffset, size, size)
+
             ctx.fillStyle = '#1f5'
             ctx.fillRect(x * size, y * size, size, size)
 

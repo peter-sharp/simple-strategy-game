@@ -1,6 +1,5 @@
 import getCenter from "./utils/getCenter.js";
 
-
 const renderers = {
     terrain: [
         function renderWater(ctx, { pos, size }) {
@@ -11,11 +10,7 @@ const renderers = {
             ctx.fillStyle = '#37f'
             ctx.fillRect(x * size, baseY, size, size)
 
-            const ripple = size * 0.25;
-            ctx.fillStyle = '#3070ff'
-            ctx.fillRect(x * size, baseY, size, ripple)
-
-            ctx.fillRect(x * size, baseY + ripple * 2, size, ripple)
+            stripe({ color:'#3070ff', dir: 'y', numStripes: 10 }, ctx, { abspos:[x* size, baseY], size })
         },
         function renderGrass(ctx, { pos, size }) {
             const [x, y] = pos;
@@ -26,16 +21,7 @@ const renderers = {
 
             ctx.fillStyle = '#1f5'
             ctx.fillRect(x * size, y * size, size, size)
-
-            const checker = size * 0.25;
-            ctx.fillStyle = '#11f955'
-            let offset = 0;
-            for (let cx = 0; cx < 4; cx += 1) {
-                for (let cy = 0; cy < 4; cy += 2) {
-                    ctx.fillRect(x * size + checker * cx, y * size + checker * (cy + offset), checker, checker)
-                }
-                offset = offset ? 0 : 1
-            }
+            checker({ color: '#11f955', numCheckers: 4 }, ctx, { abspos: [x * size, y * size], size });
         },
         function renderForest(ctx, { pos, size }) {
             const [x, y] = pos;
@@ -47,9 +33,12 @@ const renderers = {
             const tenth = size * 0.1;
             ctx.fillRect(x * size, y * size - tenth, size, size)
 
+            stripe({ color:'#163', dir: 'x', numStripes: 10 }, ctx, { abspos: [x * size, y * size - tenth], size})
+
             const halfSize = size * 0.5
             ctx.fillStyle = '#1a6'
             ctx.fillRect(x * size, y * size - halfSize, size, size)
+            checker({ color: '#196', numCheckers: 8 }, ctx, { abspos: [x * size, y * size - halfSize], size })
         }
     ],
     objects: {
@@ -201,6 +190,34 @@ const renderers = {
             btn.dataset.destinationButton = '';
             HUD.appendChild(btn);
         }
+    }
+}
+
+function stripe({ color, numStripes, dir }, ctx, { abspos, size }) {
+    const stripe = size / numStripes;
+    ctx.fillStyle = color;
+    const dirArgs = (dir, sD, [x, y], size) => dir == 'y' ? 
+                      [x , y + stripe * sD, size, stripe] : 
+                      [x + stripe * sD, y, stripe, size];
+
+    for (let sD = 0; sD < numStripes; sD += 2) {
+        const [x, y, width, height] = dirArgs(dir, sD, abspos, size);
+        console.log({ color, x, y, width, height });
+        ctx.fillRect(x, y, width, height)
+    }
+}
+
+function checker({ color, numCheckers }, ctx, { abspos, size }) {
+
+    ctx.fillStyle = color
+    const checkerSize = size / numCheckers;
+    const [x, y] = abspos;
+    let offset = 0;
+    for (let cx = 0; cx < numCheckers; cx += 1) {
+        for (let cy = 0; cy < numCheckers; cy += 2) {
+            ctx.fillRect(x + checkerSize * cx, y + checkerSize * (cy + offset), checkerSize, checkerSize)
+        }
+        offset = offset ? 0 : 1
     }
 }
 

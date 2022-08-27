@@ -1,3 +1,8 @@
+/**
+ * Initializes game plugins
+ * @param {Array} plugins 
+ * @returns {Array}
+ */
 export default function initPlugins(plugins = []) {
     return plugins.reduce(function sortByFunctionality(sorted, plugin) {
         const [renderers = [], reducers = [], controllers = []] = sorted

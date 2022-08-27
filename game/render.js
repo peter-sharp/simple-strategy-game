@@ -78,8 +78,10 @@ export default function render(context, HUD, renderers, state) {
 
         // turn HUD
         const currentTurnPlayer = getByTeamColor(state.players, state.currentTurn);
-        document.getElementById('currentTurnPlayerName').innerText = `${currentTurnPlayer.name}'s`;
-        document.getElementById('gameFooter').style.setProperty('--color', currentTurnPlayer.teamColor);
+        if(currentTurnPlayer){
+            document.getElementById('currentTurnPlayerName').innerText = `${currentTurnPlayer.name}'s`;
+            document.getElementById('gameFooter').style.setProperty('--color', currentTurnPlayer.teamColor);
+        }
 
     }
 

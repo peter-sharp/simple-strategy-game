@@ -3,7 +3,13 @@ import getTile from './getTile.js';
 
 const getByTeamColor = getByProp.bind(null, 'teamColor');
 
-
+/**
+ * Renders game state
+ * @param {CanvasRenderingContext2D} context 
+ * @param {Element} HUD HUD container element
+ * @param {Object} renderers rendering functions
+ * @param {Object} state game state 
+ */
 export default function render(context, HUD, renderers, state) {
     //layers 
     function renderTerrain(state, renderers) {

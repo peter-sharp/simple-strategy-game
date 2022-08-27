@@ -2,6 +2,12 @@ import getCenter from "./utils/getCenter.js";
 
 const renderers = {
     terrain: [
+
+        /**
+         * Renders water tile
+         * @param {CanvasRenderingContext2D} ctx 
+         * @param {*} - pos, size 
+         */
         function renderWater(ctx, { pos, size }) {
             const [x, y] = pos;
 
@@ -12,6 +18,12 @@ const renderers = {
 
             stripe({ color:'#3070ff', dir: 'y', numStripes: 10 }, ctx, { abspos:[x* size, baseY], size })
         },
+
+        /**
+         * Renders grass tile
+         * @param {CanvasRenderingContext2D} ctx 
+         * @param {*} - pos, size 
+         */
         function renderGrass(ctx, { pos, size }) {
             const [x, y] = pos;
 
@@ -23,6 +35,12 @@ const renderers = {
             ctx.fillRect(x * size, y * size, size, size)
             checker({ color: '#11f955', numCheckers: 4 }, ctx, { abspos: [x * size, y * size], size });
         },
+
+        /**
+         * Renders forest tile
+         * @param {CanvasRenderingContext2D} ctx 
+         * @param {*} - pos, size 
+         */
         function renderForest(ctx, { pos, size }) {
             const [x, y] = pos;
             
@@ -42,6 +60,12 @@ const renderers = {
         }
     ],
     objects: {
+
+        /**
+         * Renders village game object
+         * @param {CanvasRenderingContext2D} ctx 
+         * @param {*} - pos, size, teamColor
+         */
         village: function renderVillage(ctx, { pos, size, teamColor = null }) {
             const [x, y] = pos;
 
@@ -94,6 +118,12 @@ const renderers = {
                 doorHeight
             )
         },
+
+        /**
+         * Renders soldier object
+         * @param {CanvasRenderingContext2D} ctx 
+         * @param {*} - pos, size, teamColor, state
+         */
         soldier: function renderSoldier(ctx, { pos, size, teamColor, state: unitState }) {
             const [x, y] = pos;
             const soldierWidth = size * 0.3;
@@ -156,6 +186,12 @@ const renderers = {
         }
     },
     HUD: {
+
+        /**
+         * Renders unit button
+         * @param {Element} HUD HUD container element
+         * @param {*} - pos, size, id, isSelected, teamColor, moves
+         */
         unitButton: function renderUnitButton(HUD, { pos, size, id, isSelected, teamColor, moves }) {
             const btn = document.createElement('button');
 
@@ -175,6 +211,12 @@ const renderers = {
             btn.dataset.isSelected = isSelected;
             HUD.appendChild(btn);
         },
+
+        /**
+         * Renders destination button
+         * @param {Element} HUD HUD container element
+         * @param {*} - id, size, pos, direction
+         */
         destinationButton: function renderDestinationButton(HUD, { id, size, pos, direction }) {
             const btn = document.createElement('button');
 
@@ -193,6 +235,12 @@ const renderers = {
     }
 }
 
+/**
+ * Creates stripes at given given position in given direction
+ * @param {*} - color, numStripes, dir 
+ * @param {CanvasRenderingContext2D} ctx canvas context instance 
+ * @param {*} - abspos, size 
+ */
 function stripe({ color, numStripes, dir }, ctx, { abspos, size }) {
     const stripe = size / numStripes;
     ctx.fillStyle = color;
@@ -202,11 +250,16 @@ function stripe({ color, numStripes, dir }, ctx, { abspos, size }) {
 
     for (let sD = 0; sD < numStripes; sD += 2) {
         const [x, y, width, height] = dirArgs(dir, sD, abspos, size);
-        console.log({ color, x, y, width, height });
         ctx.fillRect(x, y, width, height)
     }
 }
 
+/**
+ * Creates checkers at given given position with given number of checkers
+ * @param {*} - color, numCheckers
+ * @param {CanvasRenderingContext2D} ctx canvas context instance 
+ * @param {*} - abspos, size 
+ */
 function checker({ color, numCheckers }, ctx, { abspos, size }) {
 
     ctx.fillStyle = color

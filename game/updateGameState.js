@@ -39,6 +39,12 @@ function nextPlayer(players, teamColor) {
     return players[(i + 1) % players.length];
 }
 
+/**
+ * Updates game state with given event
+ * @param {Object} state game state 
+ * @param {Object} event game event
+ * @returns {Object} updated game state
+ */
 export default function updateGameState(state, event) {
 
     // remove destroyed objects

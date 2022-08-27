@@ -39,6 +39,11 @@ const initialState = {
     HUDControls: []
 }
 
+/**
+ * Controls game
+ * @param {Function} emit 
+ * @param {Element} game 
+ */
 function gameController(emit, game) {
     game.addEventListener('click', delegate('[data-unit-button]', function unitAction(ev) {
         emit({ type: 'unitAction', id: parseInt(ev.target.dataset.id, 10) });
@@ -74,6 +79,10 @@ function gameController(emit, game) {
     emit({ type: 'init' })
 }
 
+/**
+ * Initializes game
+ * @param {*} options
+ */
 export default function init({plugins= []} = {}) {
 
     
